@@ -24,6 +24,9 @@ public interface UserDao {
     @Query("SELECT * FROM user_table WHERE username = :username LIMIT 1")
     User getUserByUsername(String username);
 
+    @Query("SELECT COUNT(*) FROM user_table WHERE username = :username ")
+    int countUsersWithUsername(String username);
+
     @Query("SELECT * FROM user_table WHERE isLoggedIn = 1 LIMIT 1")
     User getLoggedInUser();
 

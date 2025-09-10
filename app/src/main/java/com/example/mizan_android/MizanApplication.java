@@ -13,6 +13,7 @@ public class MizanApplication extends Application {
         super.onCreate();
         appDatabase = Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "app_database")
+                .fallbackToDestructiveMigration()
                 .build();
     }
 

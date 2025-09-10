@@ -1,5 +1,6 @@
 package com.example.mizan_android.data;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -9,7 +10,11 @@ public class User {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String username;
-    private String password;
+
+    private String fullName;
+
+    @NonNull
+    private String passwordStorage;
 
     private boolean isLoggedIn;
 
@@ -24,6 +29,14 @@ public class User {
         this.id = id;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -32,12 +45,12 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordStorage() {
+        return passwordStorage;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordStorage(String passwordStorage) {
+        this.passwordStorage = passwordStorage;
     }
 
     public boolean getIsLoggedIn() {
@@ -48,9 +61,10 @@ public class User {
         this.isLoggedIn = isLoggedIn;
     }
 
-    public User(String username, String password) {
+    public User(@NonNull String username, @NonNull String passwordStorage, String fullName) {
+        this.fullName = fullName;
         this.username = username;
-        this.password = password;
+        this.passwordStorage = passwordStorage;
     }
 
 
