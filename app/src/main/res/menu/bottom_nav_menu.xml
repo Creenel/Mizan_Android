@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+    android:title="Home" />
+
+    <item
+        android:id="@+id/nav_ngos"
+        android:icon="@drawable/ic_ngos"
+    android:title="NGOs" />
+
+    <item
+        android:id="@+id/nav_resources"
+        android:icon="@drawable/ic_resources"
+    android:title="Resources" />
+
+    <item
+        android:id="@+id/nav_cases"
+        android:icon="@drawable/ic_cases"
+    android:title="Cases" />
+
+    <item
+        android:id="@+id/nav_messenger"
+        android:icon="@drawable/ic_messenger"
+    android:title="Messenger" />
+
+</menu>

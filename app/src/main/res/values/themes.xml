@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.Mizan_Android" parent="Base.Theme.Mizan_Android" />
+
+    <style name="CustomBottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <!-- Adjust spacing between icon & label -->
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
 </resources>

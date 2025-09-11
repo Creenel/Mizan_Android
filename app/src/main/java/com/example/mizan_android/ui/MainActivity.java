@@ -3,6 +3,7 @@ package com.example.mizan_android.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     if (!isFinishing()) {
-                        TextView helloText = findViewById(R.id.helloText);
-                        if (helloText != null) {
-                            helloText.setText(helloTextValue);
-                        }
+                        //TextView helloText = findViewById(R.id.helloText);
+                        //if (helloText != null) {
+                            //helloText.setText(helloTextValue);
+                        //}
 
-                        Button signoutButton = findViewById(R.id.signoutButton);
+                        ImageView signoutButton = findViewById(R.id.signoutIcon);
                         signoutButton.setOnClickListener(v -> {
                             executor.execute(() -> {
                                 user.setIsLoggedIn(false);
