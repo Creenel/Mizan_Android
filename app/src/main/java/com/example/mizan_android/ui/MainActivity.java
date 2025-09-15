@@ -11,6 +11,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
 
 import com.example.mizan_android.MizanApplication;
 import com.example.mizan_android.R;
@@ -86,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
                                 });
                             });
                         });
+                        Fragment fragment = new HomeFragment();
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, fragment);
+                        transaction.commit();
                     }
                 });
 
