@@ -9,12 +9,13 @@
     android:fillViewport="true"
     tools:context="com.example.mizan_android.ui.HomeFragment">
 
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+        android:gravity="center"
         android:padding="18dp">
-
         <!-- Banner Header -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -172,38 +173,40 @@
             android:gravity="center"
             android:layout_marginBottom="28dp" />
 
+
         <!-- Report Button -->
         <FrameLayout
             android:id="@+id/reportButtonArea"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginBottom="38dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
 
+
+            <!-- Glowing background -->
             <ImageView
                 android:id="@+id/glowCircle"
-                android:layout_width="210dp"
-                android:layout_height="210dp"
+                android:layout_width="260dp"
+                android:layout_height="260dp"
                 android:src="@drawable/glow_circle"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:alpha="0.85" />
 
+
+            <!-- Main button -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/reportButton"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:layout_margin="16dp"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:translationZ="12dp"
                 android:backgroundTint="@android:color/transparent"
-                app:cardCornerRadius="125dp"
-                app:cardElevation="16dp"
+                app:cardCornerRadius="110dp"
+                app:cardElevation="20dp"
                 app:cardBackgroundColor="@color/mizan_yellow"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_gravity="center">
 
 
                 <LinearLayout
@@ -215,8 +218,8 @@
 
                     <ImageView
                         android:id="@+id/reportIcon"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:src="@drawable/ic_shield"
                         app:tint="@android:color/white" />
 
@@ -226,12 +229,14 @@
                         android:layout_height="wrap_content"
                         android:text="REPORT"
                         android:textColor="@android:color/white"
-                        android:textSize="22sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="12dp"/>
+                        android:letterSpacing="0.1"
+                        android:layout_marginTop="10dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </FrameLayout>
+
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
