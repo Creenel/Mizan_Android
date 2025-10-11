@@ -78,9 +78,9 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:background="#0b2836"
-        style="@style/CustomBottomNavigation"
+        app:itemIconSize="24dp"
         app:itemIconTint="@color/mizan_yellow"
         app:itemTextColor="@color/mizan_yellow"
         app:labelVisibilityMode="labeled"
@@ -88,5 +88,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
