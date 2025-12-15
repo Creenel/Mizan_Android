@@ -41,14 +41,11 @@ public class ReportFragment extends Fragment {
     private Button btnLocation, btnAttachments, btnSubmit;
     private LocationManager locationManager;
 
-    private ImageButton backButton;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_report, container, false);
 
-        backButton = view.findViewById(R.id.backButton);
         spinnerCrimeType = view.findViewById(R.id.spinner_crime_type);
         editDescription = view.findViewById(R.id.edit_description);
         editDate = view.findViewById(R.id.edit_date);
@@ -65,13 +62,10 @@ public class ReportFragment extends Fragment {
         btnLocation.setOnClickListener(v -> requestUserLocation());
         btnAttachments.setOnClickListener(v -> showAttachmentOptions());
         btnSubmit.setOnClickListener(v -> handleSubmit());
-        backButton.setOnClickListener(v -> returnToHome());
+
         return view;
     }
 
-    private void returnToHome(){
-        requireActivity().getSupportFragmentManager().popBackStack();
-    }
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);

@@ -26,7 +26,7 @@ import android.widget.TextView;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Splash extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -73,7 +73,7 @@ public class Splash extends AppCompatActivity {
                     runOnUiThread(() -> {
                         progressBar.setVisibility(View.GONE);
                         if (!isFinishing()) {
-                            Intent intent = new Intent(Splash.this, isLoggedIn ? MainActivity.class : LoginActivity.class);
+                            Intent intent = new Intent(SplashActivity.this, isLoggedIn ? MainActivity.class : LoginActivity.class);
                             startActivity(intent);
                             finish();
                         }

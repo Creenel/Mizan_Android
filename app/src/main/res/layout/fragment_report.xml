@@ -16,18 +16,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
 
-        <!-- Back button -->
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="start"
-            android:layout_marginBottom="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Go back"
-            android:src="@drawable/ic_signout"
-            android:tint="@android:color/white" />
-
         <!-- Header -->
         <LinearLayout
             android:id="@+id/header"

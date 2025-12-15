@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .setReorderingAllowed(true)
-                    .replace(R.id.fragment_container, new com.example.mizan_android.ui.ReportFragment())
+                    .replace(R.id.nav_host_fragment, new com.example.mizan_android.ui.ReportFragment())
                     .addToBackStack("report")
                     .commit();
         });

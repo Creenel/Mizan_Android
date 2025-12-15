@@ -2,28 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_home"
+        android:id="@+id/reportFragment"
         android:icon="@drawable/ic_home"
-    android:title="Home" />
+        android:title="Report" />
 
     <item
-        android:id="@+id/nav_ngos"
+        android:id="@+id/organizationsFragment"
         android:icon="@drawable/ic_ngos"
-    android:title="NGOs" />
+        android:title="Organizations" />
 
-    <item
-        android:id="@+id/nav_resources"
-        android:icon="@drawable/ic_resources"
-    android:title="Resources" />
 
-    <item
-        android:id="@+id/nav_cases"
-        android:icon="@drawable/ic_cases"
-    android:title="Cases" />
-
-    <item
-        android:id="@+id/nav_messenger"
-        android:icon="@drawable/ic_messenger"
-    android:title="Messenger" />
 
 </menu>
