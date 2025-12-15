@@ -1,103 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll_report"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@color/mizan_blue">
 
     <LinearLayout
-        android:id="@+id/container"
-        android:orientation="vertical"
-        android:padding="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
         android:gravity="center_horizontal">
 
         <!-- Header -->
         <LinearLayout
-            android:id="@+id/header"
-            android:orientation="vertical"
-            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
 
             <FrameLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center">
-
-                <View
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="#6495ED" />
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/bg_circle_yellow"
+                android:elevation="6dp">
 
                 <ImageView
-                    android:id="@+id/icon_shield"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_shield"
-                    app:tint="@color/mizan_yellow" />
+                    app:tint="@color/mizan_blue" />
             </FrameLayout>
 
             <TextView
-                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Report a Crime"
                 android:textColor="@color/mizan_yellow"
-                android:textSize="24sp"
+                android:textSize="26sp"
                 android:textStyle="bold"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="12dp" />
 
             <TextView
-                android:id="@+id/subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your report helps us make a difference. Please fill out the details below."
-                android:textColor="#99A3B0"
+                android:text="Your report helps protect the community. All submissions are handled securely."
+                android:textColor="#B9C3D6"
                 android:textSize="14sp"
                 android:gravity="center"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginTop="6dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp" />
         </LinearLayout>
 
-        <!-- Form Card -->
+        <!-- Card -->
         <LinearLayout
-            android:id="@+id/card"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#6495ED"
-            android:padding="20dp"
-            android:layout_marginBottom="20dp">
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:padding="20dp">
 
-            <!-- Crime Type -->
             <TextView
-                android:id="@+id/label_crime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Type of Crime"
+                android:text="Crime Type"
                 android:textColor="@color/mizan_yellow"
                 android:textStyle="bold"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginBottom="4dp"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent" />
 
             <Spinner
                 android:id="@+id/spinner_crime_type"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#d3d3d3" />
+                android:layout_height="48dp"
+                android:background="@drawable/bg_input" />
 
-            <!-- Description -->
             <TextView
-                android:id="@+id/label_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
                 android:text="Description"
                 android:textColor="@color/mizan_yellow"
                 android:textStyle="bold"
@@ -108,19 +91,17 @@
                 android:id="@+id/edit_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Add details (What happened? Where? How?)"
-                android:background="#d3d3d3"
-                android:textColorHint="#B5B9C7"
                 android:minLines="4"
                 android:gravity="top"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="4dp" />
+                android:background="@drawable/bg_input"
+                android:hint="What happened? Where?"
+                android:textColor="@color/mizan_blue"
+                android:textColorHint="#8A95AA"
+                android:padding="12dp" />
 
-            <!-- Date -->
             <TextView
-                android:id="@+id/label_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
                 android:text="Date"
                 android:textColor="@color/mizan_yellow"
                 android:textStyle="bold"
@@ -130,32 +111,27 @@
             <EditText
                 android:id="@+id/edit_date"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="DD/MM/YYYY"
-                android:background="#d3d3d3"
-                android:textColorHint="#B5B9C7"
-                android:textColor="@android:color/black"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_input"
+                android:hint="DD / MM / YYYY"
+                android:textColor="@color/mizan_blue"
+                android:textColorHint="#8A95AA"
                 android:focusable="false"
-                android:clickable="true"
-                android:layout_marginTop="4dp" />
+                android:padding="12dp" />
 
-            <!-- Anonymous checkbox -->
             <CheckBox
                 android:id="@+id/checkbox_anonymous"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Submit Anonymously"
+                android:text="Submit anonymously"
                 android:textColor="@color/mizan_yellow"
                 android:layout_marginTop="12dp" />
 
-            <!-- Location & Attachments buttons -->
             <LinearLayout
-                android:id="@+id/buttons_parent"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginTop="12dp">
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
 
                 <Button
                     android:id="@+id/btn_location"
@@ -164,8 +140,11 @@
                     android:layout_weight="1"
                     android:text="Add Location"
                     android:backgroundTint="@color/mizan_yellow"
-                    android:textColor="@color/mizan_blue"
-                    android:layout_marginEnd="8dp" />
+                    android:textColor="@color/mizan_blue" />
+
+                <Space
+                    android:layout_width="12dp"
+                    android:layout_height="1dp" />
 
                 <Button
                     android:id="@+id/btn_attachments"
@@ -174,27 +153,9 @@
                     android:layout_weight="1"
                     android:text="Add Files"
                     android:backgroundTint="@color/mizan_yellow"
-                    android:textColor="@color/mizan_blue"
-                    android:layout_marginStart="8dp" />
+                    android:textColor="@color/mizan_blue" />
             </LinearLayout>
 
-            <!-- Location pill (optional display) -->
-            <TextView
-                android:id="@+id/text_location_pill"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:visibility="gone"
-                android:layout_marginTop="8dp"
-                android:background="#d3d3d3"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-                android:textColor="@color/mizan_yellow"
-                android:textSize="13sp" />
-
-            <!-- Submit Button -->
             <Button
                 android:id="@+id/btn_submit"
                 android:layout_width="match_parent"

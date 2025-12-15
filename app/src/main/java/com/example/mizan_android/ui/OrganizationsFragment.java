@@ -63,6 +63,7 @@ public class OrganizationsFragment extends Fragment {
                 Organization org = organizations.get(position);
                 holder.name.setText(org.name);
                 holder.image.setImageResource(org.imageRes);
+                holder.description.setText(org.summary);
                 holder.itemView.setOnClickListener(v -> openChat(org));
             }
 
@@ -136,10 +137,13 @@ public class OrganizationsFragment extends Fragment {
     static class OrgViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         ImageView image;
+
+        TextView description;
         public OrgViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.text_name);
             image = itemView.findViewById(R.id.image_org);
+            description = itemView.findViewById(R.id.text_description);
         }
     }
 }
