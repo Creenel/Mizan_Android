@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Button;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -75,10 +77,9 @@ public class OrganizationsFragment extends Fragment {
     }
 
     private void openChat(Organization org) {
-        // Placeholder: replace with actual navigation to Messenger
-        Uri uri = Uri.parse("https://wa.me/972053924052");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
+        // Placeholder
+        Toast.makeText(getContext(), "This chat is not available yet!", Toast.LENGTH_SHORT).show();
+
     }
 
     private void setupLawyers() {

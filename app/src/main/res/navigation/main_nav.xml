@@ -17,6 +17,12 @@
         android:label="fragment_organizations"
         tools:layout="@layout/fragment_organizations" />
 
+    <fragment
+        android:id="@+id/casesFragment"
+        android:name="com.example.mizan_android.ui.CasesFragment"
+        android:label="fragment_cases"
+        tools:layout="@layout/fragment_cases" />
+
 
 </navigation>
     

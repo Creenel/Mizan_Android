@@ -11,6 +11,12 @@
         android:icon="@drawable/ic_ngos"
         android:title="Organizations" />
 
+    <item
+        android:id="@+id/casesFragment"
+        android:icon="@drawable/ic_cases"
+        android:title="My Cases" />
+
+
 
 
 </menu>
