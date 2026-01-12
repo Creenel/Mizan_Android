@@ -6,7 +6,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.Delete;
 import com.example.mizan_android.data.User;
-
 import java.util.List;
 
 @Dao
@@ -32,4 +31,5 @@ public interface UserDao {
 
     @Query("SELECT * FROM user_table")
     List<User> getAllUsers();
+
 }

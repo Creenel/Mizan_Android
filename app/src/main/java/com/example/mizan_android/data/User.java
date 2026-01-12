@@ -8,7 +8,9 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "user_table")
 public class User {
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int userId;
+
+    @NonNull
     private String username;
 
     private String fullName;
@@ -22,11 +24,11 @@ public class User {
     }
 
     public int getId() {
-        return id;
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int userId) {
+        this.userId = userId;
     }
 
     public String getFullName() {

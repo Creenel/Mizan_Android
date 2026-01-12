@@ -24,7 +24,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.mizan_android.MizanApplication;
 import com.example.mizan_android.R;
+import com.example.mizan_android.data.AppDatabase;
+import com.example.mizan_android.data.CaseDao;
+import com.example.mizan_android.data.CaseEntity;
+import com.example.mizan_android.data.User;
+import com.example.mizan_android.data.UserDao;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -41,6 +47,14 @@ public class ReportFragment extends Fragment {
     private Button btnLocation, btnAttachments, btnSubmit;
     private LocationManager locationManager;
 
+    private double latitude;
+    private double longitude;
+
+    AppDatabase db = ((MizanApplication) requireActivity().getApplicationContext()).getDatabase();
+    UserDao userDao = db.userDao();
+    CaseDao caseDao = db.CaseDao();
+    User user = userDao.getLoggedInUser();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,6 +67,8 @@ public class ReportFragment extends Fragment {
         btnLocation = view.findViewById(R.id.btn_location);
         btnAttachments = view.findViewById(R.id.btn_attachments);
         btnSubmit = view.findViewById(R.id.btn_submit);
+
+
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(), R.array.crime_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -107,8 +123,8 @@ public class ReportFragment extends Fragment {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
                 @Override
                 public void onLocationChanged(@NonNull Location location) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
                     Toast.makeText(requireContext(), "Location logged: (" + latitude + ", " + longitude + ")", Toast.LENGTH_LONG).show();
                     locationManager.removeUpdates(this);
                 }
@@ -152,8 +168,27 @@ public class ReportFragment extends Fragment {
 
         if (description.isEmpty() || date.isEmpty()) {
             Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(requireContext(), "Report submitted successfully (local only)", Toast.LENGTH_LONG).show();
-        }
+            return; }
+            CaseEntity newCase = new CaseEntity(
+                    User.getId(),
+                    type,
+                    description,
+                    "pending",
+                    date
+            );
+
+            db.caseDao().insert(newCase);
+
+            // 4️⃣ UI feedback
+            requireActivity().runOnUiThread(() -> {
+                Toast.makeText(requireContext(),
+                        "Report submitted successfully",
+                        Toast.LENGTH_LONG).show();
+
+                // optional: clear fields
+                editDescription.setText("");
+                editDate.setText("");
+            });
+        });
     }
 }
