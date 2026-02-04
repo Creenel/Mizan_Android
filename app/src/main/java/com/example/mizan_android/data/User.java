@@ -23,11 +23,11 @@ public class User {
     public User() {
     }
 
-    public int getId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setId(int userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

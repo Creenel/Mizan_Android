@@ -22,6 +22,7 @@ import com.example.mizan_android.data.User;
 import com.example.mizan_android.data.UserDao;
 import android.os.BatteryManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,6 +39,7 @@ public class SplashActivity extends AppCompatActivity {
     private TextView mBatteryLevelText;
     private ProgressBar mBatteryLevelProgress;
     private BroadcastReceiver mReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,37 +49,56 @@ public class SplashActivity extends AppCompatActivity {
         AppDatabase db = ((MizanApplication) getApplicationContext()).getDatabase();
         final UserDao userDao = db.userDao();
 
+        // Keep original variable names
         progressBar = findViewById(R.id.progressBar);
         layout = findViewById(R.id.splashLayout);
         imageView = findViewById(R.id.ivSplashIcon);
         animation = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
 
-        mBatteryLevelText = (TextView) findViewById(R.id.textView);
-        mBatteryLevelProgress = (ProgressBar) findViewById(R.id.progressBar);
+        mBatteryLevelText = findViewById(R.id.textView);
+        mBatteryLevelProgress = findViewById(R.id.progressBar); // still same, will guard later
 
         mReceiver = new BatteryBroadcastReceiver();
-        // Set listener BEFORE starting the animation so we catch onAnimationStart
+
+        // Animation listener
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                progressBar.setVisibility(View.VISIBLE);
+                if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                // Query DB off the UI thread
                 executor.execute(() -> {
-                    User user = userDao.getLoggedInUser();
-                    final boolean isLoggedIn = (user != null);
+                    try {
+                        // Room query wrapped in try/catch
+                        User user = userDao.getLoggedInUser();
+                        final boolean isLoggedIn = (user != null);
 
-                    runOnUiThread(() -> {
-                        progressBar.setVisibility(View.GONE);
-                        if (!isFinishing()) {
-                            Intent intent = new Intent(SplashActivity.this, isLoggedIn ? MainActivity.class : LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
+                        runOnUiThread(() -> {
+                            if (progressBar != null) progressBar.setVisibility(View.GONE);
+                            if (!isFinishing()) {
+                                Intent intent = new Intent(
+                                        SplashActivity.this,
+                                        isLoggedIn ? MainActivity.class : LoginActivity.class
+                                );
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() -> {
+                            if (!isFinishing()) {
+                                Toast.makeText(
+                                        SplashActivity.this,
+                                        "Database error: " + e.getMessage(),
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+                        });
+                    }
                 });
             }
 
@@ -87,7 +108,7 @@ public class SplashActivity extends AppCompatActivity {
 
         // Start animation after 3 seconds
         handler.postDelayed(() -> {
-            if (!isFinishing()) {
+            if (!isFinishing() && imageView != null) {
                 imageView.startAnimation(animation);
             }
         }, 3000);
@@ -95,35 +116,42 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        registerReceiver(mReceiver, new IntentFilter ( Intent.ACTION_BATTERY_CHANGED));
         super.onStart();
+        try {
+            if (mReceiver != null)
+                registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onStop() {
-        unregisterReceiver(mReceiver);
         super.onStop();
+        try {
+            if (mReceiver != null)
+                unregisterReceiver(mReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
-        if (!executor.isShutdown()) {
-            executor.shutdownNow();
-        }
+        if (!executor.isShutdown()) executor.shutdownNow();
     }
 
     private class BatteryBroadcastReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
-            int level = intent.getIntExtra( BatteryManager.EXTRA_LEVEL, 0);
-
-            mBatteryLevelText.setText(getString(R.string.battery_level) + "  " + level);
-            mBatteryLevelProgress.setProgress(level);
+            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+            // Defensive null-checks
+            if (mBatteryLevelText != null)
+                mBatteryLevelText.setText(getString(R.string.battery_level) + "  " + level);
+            if (mBatteryLevelProgress != null)
+                mBatteryLevelProgress.setProgress(level);
         }
-
-
     }
 }

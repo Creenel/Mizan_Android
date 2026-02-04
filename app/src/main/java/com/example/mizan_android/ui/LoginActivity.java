@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     User user = userDao.getUserByUsername(email);
 
-                    if (user != null && PasswordUtils.verifyPassword(password, user.getPasswordStorage())) {
+                    if (user != null && user.getPasswordStorage() != null && PasswordUtils.verifyPassword(password, user.getPasswordStorage())) {
                         user.setIsLoggedIn(true);
                         userDao.update(user);
 

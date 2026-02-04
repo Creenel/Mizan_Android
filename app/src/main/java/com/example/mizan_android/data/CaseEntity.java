@@ -25,23 +25,75 @@ public class CaseEntity {
 
     @NonNull
     private String type;
+
     private String description;
+
     @NonNull
     private String date;
+
     @NonNull
     private String status;
 
+    // ✅ Must exist
+    public CaseEntity() {}
 
-    public CaseEntity(int userId,
-                      @NonNull String type,
-                      String description,
-                      @NonNull String status,
-                      String date) {
+    public CaseEntity(int userId, @NonNull String type, String description, @NonNull String status, @NonNull String date) {
         this.userId = userId;
         this.type = type;
         this.description = description;
         this.status = status;
         this.date = date;
+    }
+
+    public int getCaseId() {
+        return caseId;
+    }
+
+    public void setCaseId(int caseId) {
+        this.caseId = caseId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    @NonNull
+    public String getType() {
+        return type;
+    }
+
+    public void setType(@NonNull String type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @NonNull
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(@NonNull String date) {
+        this.date = date;
+    }
+
+    @NonNull
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(@NonNull String status) {
+        this.status = status;
     }
 
     // getters / setters

@@ -34,6 +34,8 @@ import com.example.mizan_android.data.UserDao;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ReportFragment extends Fragment {
 
@@ -49,17 +51,27 @@ public class ReportFragment extends Fragment {
 
     private double latitude;
     private double longitude;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    AppDatabase db = ((MizanApplication) requireActivity().getApplicationContext()).getDatabase();
-    UserDao userDao = db.userDao();
-    CaseDao caseDao = db.CaseDao();
-    User user = userDao.getLoggedInUser();
+    private AppDatabase db;
+    private UserDao userDao;
+    private CaseDao caseDao;
+    private User user;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_report, container, false);
 
+        // Initialize database and DAOs here
+        db = ((MizanApplication) requireActivity().getApplicationContext()).getDatabase();
+        userDao = db.userDao();
+        caseDao = db.caseDao();
+        executor.execute(() -> {
+            user = userDao.getLoggedInUser();
+        });
+
+        // Initialize UI
         spinnerCrimeType = view.findViewById(R.id.spinner_crime_type);
         editDescription = view.findViewById(R.id.edit_description);
         editDate = view.findViewById(R.id.edit_date);
@@ -68,9 +80,9 @@ public class ReportFragment extends Fragment {
         btnAttachments = view.findViewById(R.id.btn_attachments);
         btnSubmit = view.findViewById(R.id.btn_submit);
 
-
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(), R.array.crime_types, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.crime_types,
+                android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCrimeType.setAdapter(adapter);
 
@@ -168,27 +180,27 @@ public class ReportFragment extends Fragment {
 
         if (description.isEmpty() || date.isEmpty()) {
             Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
-            return; }
+            return;
+        }
+
+        // Run database insert on a background thread
+        new Thread(() -> {
             CaseEntity newCase = new CaseEntity(
-                    User.getId(),
+                    user.getUserId(),
                     type,
                     description,
                     "pending",
                     date
             );
+            caseDao.insert(newCase);
 
-            db.caseDao().insert(newCase);
-
-            // 4️⃣ UI feedback
             requireActivity().runOnUiThread(() -> {
                 Toast.makeText(requireContext(),
                         "Report submitted successfully",
                         Toast.LENGTH_LONG).show();
-
-                // optional: clear fields
                 editDescription.setText("");
                 editDate.setText("");
             });
-        });
+        }).start();
     }
 }

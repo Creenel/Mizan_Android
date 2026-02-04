@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -93,10 +95,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Throwable t) {
+                t.printStackTrace();
                 runOnUiThread(() -> {
                     if (!isFinishing()) {
+                        // Show a Toast with the actual Room error
+                        Toast.makeText(MainActivity.this, "DB error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+
+                        // Optionally still go to LoginActivity
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         finish();
                     }
