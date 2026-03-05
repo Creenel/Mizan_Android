@@ -96,6 +96,5 @@ public class CaseEntity {
         this.status = status;
     }
 
-    // getters / setters
 }
 

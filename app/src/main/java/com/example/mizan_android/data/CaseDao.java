@@ -11,9 +11,11 @@ import java.util.List;
 public interface CaseDao {
 
     @Insert
-    void insert(CaseEntity c);
+    void insert(CaseEntity caseEntity);
 
-    @Query(" SELECT * FROM case_table WHERE userId = :userId")
+    @Query("SELECT * FROM case_table WHERE userId = :userId ORDER BY caseId DESC")
     LiveData<List<CaseEntity>> getCasesForUser(int userId);
-}
 
+    @Query("SELECT * FROM case_table WHERE userId = :userId")
+    List<CaseEntity> getCasesForUserDebug(int userId);
+}

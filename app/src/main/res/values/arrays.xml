@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="case_sort_options">
+        <item>Newest first</item>
+        <item>Oldest first</item>
+        <item>Type (A–Z)</item>
+    </string-array>
+</resources>
