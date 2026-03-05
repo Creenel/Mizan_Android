@@ -1,10 +1,11 @@
 package com.example.mizan_android.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -23,6 +24,12 @@ import com.example.mizan_android.data.CaseEntity;
 import com.example.mizan_android.data.User;
 import com.example.mizan_android.data.UserDao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,6 +43,15 @@ public class CasesFragment extends Fragment {
     private CasesViewModel viewModel;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
+    private List<CaseEntity> currentCases = null;
+
+    private static final String[] SORT_OPTIONS = new String[]{
+            "Date (newest first)",
+            "Crime type (A→Z)"
+    };
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d/M/yyyy"); // matches ReportFragment
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -43,8 +59,9 @@ public class CasesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_cases, container, false);
 
-        recyclerCases = root.findViewById(R.id.recyclerCases);
+        recyclerCases = root.findViewById(R.id.recycler_cases);
         emptyState = root.findViewById(R.id.emptyState);
+        spinnerSort = root.findViewById(R.id.spinner_sort);
 
         adapter = new CasesAdapter();
         recyclerCases.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -52,21 +69,18 @@ public class CasesFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(CasesViewModel.class);
 
-        // load user + attach observers
+        setupSpinner();
+
         executor.execute(() -> {
             AppDatabase db = ((MizanApplication) requireActivity().getApplicationContext()).getDatabase();
             UserDao userDao = db.userDao();
 
-            Log.d("DB_DEBUG", "CasesFragment: AppDatabase instance=" + System.identityHashCode(db));
             User logged = null;
             try {
                 logged = userDao.getLoggedInUser();
-            } catch (Exception e) {
-                Log.e("DB_DEBUG", "getLoggedInUser failed", e);
-            }
+            } catch (Exception ignored) {}
 
             if (logged == null) {
-                Log.d("DB_DEBUG", "CasesFragment: No logged-in user");
                 requireActivity().runOnUiThread(() -> {
                     recyclerCases.setVisibility(View.GONE);
                     emptyState.setVisibility(View.VISIBLE);
@@ -75,62 +89,56 @@ public class CasesFragment extends Fragment {
             }
 
             final int userId = logged.getUserId();
-            Log.d("DB_DEBUG", "CasesFragment: logged userId=" + userId + " username=" + logged.getUsername());
-
-            // run UI operations on main thread
             requireActivity().runOnUiThread(() -> attachLiveData(userId));
         });
 
         return root;
     }
 
-    // Attach LiveData observer with defensive checks and fallback
+    private void setupSpinner() {
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_spinner_item, SORT_OPTIONS);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSort.setAdapter(spinnerAdapter);
+        spinnerSort.setSelection(0, false); // default to Date
+
+        spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (currentCases != null) {
+                    applySortAndShow(new ArrayList<>(currentCases));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
     private void attachLiveData(int userId) {
         try {
-            Log.d("DB_DEBUG", "Calling viewModel.loadCases(userId=" + userId + ")");
             viewModel.loadCases(userId);
 
             LiveData<List<CaseEntity>> ld = viewModel.getCases();
-
             if (ld == null) {
-                Log.w("DB_DEBUG", "viewModel.getCases() returned null — doing fallback sync read");
                 doFallbackSyncReadAndShow();
                 return;
             }
 
-            // Safe lifecycle observer
             ld.observe(getViewLifecycleOwner(), list -> {
-                try {
-                    int received = (list == null) ? 0 : list.size();
-                    Log.d("DB_DEBUG", "LiveData observer -> received=" + received);
-
-                    if (list == null || list.isEmpty()) {
-                        // fallback to sync read so UI isn't empty while debugging
-                        doFallbackSyncReadAndShow();
-                        return;
-                    }
-
-                    // normal path: update UI
-                    emptyState.setVisibility(View.GONE);
-                    recyclerCases.setVisibility(View.VISIBLE);
-
-                    adapter.setCases(list);
-
-                } catch (Exception innerEx) {
-                    // log and fallback
-                    Log.e("DB_DEBUG", "Exception inside LiveData observer", innerEx);
+                if (list == null || list.isEmpty()) {
                     doFallbackSyncReadAndShow();
+                    return;
                 }
+                currentCases = new ArrayList<>(list);
+                applySortAndShow(new ArrayList<>(list));
             });
 
-        } catch (Exception e) {
-            // any exception while attaching observer -> fallback
-            Log.e("DB_DEBUG", "Failed to attach LiveData observer", e);
+        } catch (Exception ignored) {
             doFallbackSyncReadAndShow();
         }
     }
 
-    // synchronous read fallback (runs async, updates UI on main thread)
     private void doFallbackSyncReadAndShow() {
         executor.execute(() -> {
             try {
@@ -145,27 +153,57 @@ public class CasesFragment extends Fragment {
                 }
 
                 List<CaseEntity> syncList = db.caseDao().getCasesForUserDebug(logged.getUserId());
-                Log.d("DB_DEBUG", "Fallback sync read size=" + (syncList == null ? 0 : syncList.size()));
 
                 requireActivity().runOnUiThread(() -> {
                     if (syncList != null && !syncList.isEmpty()) {
-                        adapter.setCases(syncList);
+                        currentCases = new ArrayList<>(syncList);
+                        applySortAndShow(new ArrayList<>(syncList));
                         recyclerCases.setVisibility(View.VISIBLE);
                         emptyState.setVisibility(View.GONE);
-                        Log.d("DB_DEBUG", "Adapter set from fallback sync read, count=" + adapter.getItemCount());
                     } else {
                         recyclerCases.setVisibility(View.GONE);
                         emptyState.setVisibility(View.VISIBLE);
                     }
                 });
 
-            } catch (Exception e) {
-                Log.e("DB_DEBUG", "Fallback sync read failed", e);
+            } catch (Exception ignored) {
                 requireActivity().runOnUiThread(() -> {
                     recyclerCases.setVisibility(View.GONE);
                     emptyState.setVisibility(View.VISIBLE);
                 });
             }
         });
+    }
+
+    private void applySortAndShow(List<CaseEntity> list) {
+        if (list == null) return;
+
+        int selection = spinnerSort != null ? spinnerSort.getSelectedItemPosition() : 0;
+
+        if (selection == 0) { // Date (newest first)
+            Collections.sort(list, (a, b) -> {
+                Date da = parseDateSafe(a.getDate());
+                Date db = parseDateSafe(b.getDate());
+                return db.compareTo(da); // newest first
+            });
+        } else { // Crime type (A→Z)
+            Collections.sort(list, (a, b) -> a.getType().compareToIgnoreCase(b.getType()));
+        }
+
+        currentCases = new ArrayList<>(list);
+        adapter.setCases(list);
+
+        boolean empty = list.isEmpty();
+        recyclerCases.setVisibility(empty ? View.GONE : View.VISIBLE);
+        emptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
+    }
+
+    private Date parseDateSafe(String s) {
+        if (s == null || s.isEmpty()) return new Date(0L);
+        try {
+            return DATE_FORMAT.parse(s);
+        } catch (ParseException e) {
+            return new Date(0L);
+        }
     }
 }
