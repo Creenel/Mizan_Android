@@ -1,36 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@android:color/white">
+    android:layout_margin="10dp"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="4dp"
+    card_view:cardBackgroundColor="@color/mizan_blue">
 
-    <TextView
-        android:id="@+id/txtCaseType"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="18sp"/>
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/case_item_border">
 
-    <TextView
-        android:id="@+id/txtCaseDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"/>
+        <TextView
+            android:id="@+id/txtCaseType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/mizan_yellow" />
 
-    <TextView
-        android:id="@+id/txtCaseStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"/>
+        <TextView
+            android:id="@+id/txtCaseDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:paddingTop="6dp" />
 
-    <TextView
-        android:id="@+id/txtCaseDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:paddingTop="6dp"/>
+        <TextView
+            android:id="@+id/txtCaseStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/mizan_yellow"
+            android:paddingTop="2dp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/txtCaseDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:paddingTop="10dp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

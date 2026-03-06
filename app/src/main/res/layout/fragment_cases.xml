@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/mizan_blue"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp">
 
-    <Spinner
-        android:id="@+id/spinner_sort"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:spinnerMode="dropdown" />
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
+        app:strokeColor="@color/mizan_yellow"
+        app:strokeWidth="2dp"
+        android:layout_marginBottom="12dp"
+        app:cardBackgroundColor="@color/mizan_blue">
+
+        <Spinner
+            android:id="@+id/spinner_sort"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@color/mizan_lightblue"
+            android:spinnerMode="dropdown" />
+    </com.google.android.material.card.MaterialCardView>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -19,7 +39,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_cases"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:padding="6dp" />
 
         <LinearLayout
             android:id="@+id/emptyState"
@@ -34,6 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="No cases reported yet"
+                android:textColor="@color/mizan_yellow"
                 android:textSize="18sp" />
 
         </LinearLayout>
