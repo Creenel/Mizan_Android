@@ -18,11 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
 import com.example.mizan_android.MizanApplication;
 import com.example.mizan_android.R;
 import com.example.mizan_android.data.AppDatabase;
@@ -30,6 +32,8 @@ import com.example.mizan_android.data.CaseDao;
 import com.example.mizan_android.data.CaseEntity;
 import com.example.mizan_android.data.User;
 import com.example.mizan_android.data.UserDao;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
@@ -46,6 +50,8 @@ public class ReportFragment extends Fragment {
     private Button btnLocation, btnAttachments, btnSubmit;
     private LocationManager locationManager;
     private double latitude, longitude;
+
+    private byte[] attachedMediaBytes;
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private AppDatabase db;
@@ -139,23 +145,50 @@ public class ReportFragment extends Fragment {
         }
     }
 
-    @Override @SuppressWarnings("deprecation")
+    private byte[] bitmapToSmallBytes(Bitmap bitmap) {
+        int maxSize = 800;
+
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        float ratio = Math.min((float) maxSize / width, (float) maxSize / height);
+        if (ratio > 1f) ratio = 1f;
+
+        int newWidth = Math.round(width * ratio);
+        int newHeight = Math.round(height * ratio);
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        return stream.toByteArray();
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) return;
+        if (resultCode != Activity.RESULT_OK || data == null) return;
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
             Bitmap bmp = (Bitmap) data.getExtras().get("data");
-            Toast.makeText(requireContext(), "Photo captured", Toast.LENGTH_SHORT).show();
-            // TODO: save or attach image bytes to case
-        } else if (requestCode == REQUEST_GALLERY_PICK && data != null) {
+            if (bmp != null) {
+                attachedMediaBytes = bitmapToSmallBytes(bmp);
+                Toast.makeText(requireContext(), "Photo captured", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == REQUEST_GALLERY_PICK) {
             Uri selected = data.getData();
-            try {
-                Bitmap b = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), selected);
-                Toast.makeText(requireContext(), "Image selected", Toast.LENGTH_SHORT).show();
-                // TODO: attach image
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (selected != null) {
+                try {
+                    Bitmap b = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), selected);
+                    if (b != null) {
+                        attachedMediaBytes = bitmapToSmallBytes(b);
+                        Toast.makeText(requireContext(), "Image selected", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(requireContext(), "Failed to read image", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -179,18 +212,29 @@ public class ReportFragment extends Fragment {
                     return;
                 }
 
-                CaseEntity c = new CaseEntity(currentUser.getUserId(), type, description, "pending", date);
+                Log.d("MEDIA_DEBUG", "attachedMediaBytes = " + (attachedMediaBytes == null ? 0 : attachedMediaBytes.length));
+
+                CaseEntity c = new CaseEntity(
+                        currentUser.getUserId(),
+                        type,
+                        description,
+                        "pending",
+                        date,
+                        attachedMediaBytes
+                );
                 caseDao.insert(c);
+
                 Log.d("DB_DEBUG", "ReportFragment inserted case. AppDatabase instance=" +
                         System.identityHashCode(((MizanApplication) requireActivity().getApplicationContext()).getDatabase()));
 
                 Log.d("DB_DEBUG", "Inserted case for userId=" + currentUser.getUserId()
-                        + " type=" + type + " date=" + date + " descLen=" + (description==null?0:description.length()));
+                        + " type=" + type + " date=" + date + " descLen=" + (description == null ? 0 : description.length()));
 
                 requireActivity().runOnUiThread(() -> {
                     Toast.makeText(requireContext(), "Report submitted", Toast.LENGTH_LONG).show();
                     editDescription.setText("");
                     editDate.setText("");
+                    attachedMediaBytes = null;
                 });
             } catch (Exception e) {
                 e.printStackTrace();

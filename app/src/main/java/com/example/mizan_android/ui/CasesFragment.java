@@ -33,6 +33,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import android.graphics.BitmapFactory;
+import android.app.AlertDialog;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 public class CasesFragment extends Fragment {
 
@@ -63,7 +67,7 @@ public class CasesFragment extends Fragment {
         emptyState = root.findViewById(R.id.emptyState);
         spinnerSort = root.findViewById(R.id.spinner_sort);
 
-        adapter = new CasesAdapter();
+        adapter = new CasesAdapter(this::showCaseMedia);
         recyclerCases.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerCases.setAdapter(adapter);
 
@@ -100,7 +104,7 @@ public class CasesFragment extends Fragment {
                 android.R.layout.simple_spinner_item, SORT_OPTIONS);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSort.setAdapter(spinnerAdapter);
-        spinnerSort.setSelection(0, false); // default to Date
+        spinnerSort.setSelection(0, false);
 
         spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -175,18 +179,45 @@ public class CasesFragment extends Fragment {
         });
     }
 
+    private void showCaseMedia(CaseEntity caseItem) {
+        executor.execute(() -> {
+            AppDatabase db = ((MizanApplication) requireActivity().getApplicationContext()).getDatabase();
+
+            byte[] media = db.caseDao().getMediaBytesByCaseId(caseItem.getCaseId());
+
+            requireActivity().runOnUiThread(() -> {
+                if (media == null || media.length == 0) {
+                    Toast.makeText(requireContext(), "No media", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                ImageView imageView = new ImageView(requireContext());
+                imageView.setAdjustViewBounds(true);
+                imageView.setImageBitmap(
+                        android.graphics.BitmapFactory.decodeByteArray(media, 0, media.length)
+                );
+
+                new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                        .setTitle("Case Media")
+                        .setView(imageView)
+                        .setPositiveButton("Close", null)
+                        .show();
+            });
+        });
+    }
+
     private void applySortAndShow(List<CaseEntity> list) {
         if (list == null) return;
 
         int selection = spinnerSort != null ? spinnerSort.getSelectedItemPosition() : 0;
 
-        if (selection == 0) { // Date (newest first)
+        if (selection == 0) {
             Collections.sort(list, (a, b) -> {
                 Date da = parseDateSafe(a.getDate());
                 Date db = parseDateSafe(b.getDate());
-                return db.compareTo(da); // newest first
+                return db.compareTo(da);
             });
-        } else { // Crime type (A→Z)
+        } else {
             Collections.sort(list, (a, b) -> a.getType().compareToIgnoreCase(b.getType()));
         }
 

@@ -92,9 +92,9 @@
                 android:minLines="4"
                 android:gravity="top"
                 android:background="@drawable/bg_input"
-                android:hint="What happened? Where?"
+                android:hint="What happened?"
+                android:textColorHint="#757575"
                 android:textColor="@color/mizan_blue"
-                android:textColorHint="#8A95AA"
                 android:padding="12dp" />
 
             <TextView

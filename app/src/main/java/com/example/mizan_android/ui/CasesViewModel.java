@@ -20,7 +20,7 @@ public class CasesViewModel extends AndroidViewModel {
 
     public CasesViewModel(@NonNull Application application) {
         super(application);
-        // Use the application-level singleton to ensure same DB instance everywhere
+
         AppDatabase db = ((MizanApplication) application).getDatabase();
         caseDao = db.caseDao();
     }
@@ -28,7 +28,7 @@ public class CasesViewModel extends AndroidViewModel {
     public void loadCases(int userId) {
         android.util.Log.d("DB_DEBUG", "CasesViewModel.loadCases called with userId=" + userId
                 + " viewModelHash=" + System.identityHashCode(this));
-        casesLive = caseDao.getCasesForUser(userId);
+        casesLive = caseDao.getCasesWithoutMedia(userId);
     }
 
     public LiveData<List<CaseEntity>> getCases() {

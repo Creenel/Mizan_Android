@@ -85,7 +85,7 @@ public class OrganizationsFragment extends Fragment {
     private void setupLawyers() {
         lawyers = new ArrayList<>();
         lawyers.add(new Lawyer("Adv. Sarah Chen", "Human Rights Law", "sarah.chen@lawfirm.com", "email"));
-        lawyers.add(new Lawyer("Adv. Omar Said", "Civil Rights & Discrimination", "18005550102", "phone"));
+        lawyers.add(new Lawyer("Adv. Omar Said", "Civil Rights & Discrimination", "omar.said@lawfirm.com", "email"));
         lawyers.add(new Lawyer("Adv. Yael Levi", "Immigration & Refugee Law", "yael.levi@lawfirm.com", "email"));
 
         LayoutInflater inflater = LayoutInflater.from(getContext());

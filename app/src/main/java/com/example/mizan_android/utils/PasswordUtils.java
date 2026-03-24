@@ -11,7 +11,6 @@ public class PasswordUtils {
     private static final String HASH_ALGORITHM = "SHA-256";
     private static final int SALT_LENGTH = 16;
 
-    // Generate salt, hashes password, returns "salt:hash"
     public static String generatePasswordStorage(String password) {
         try {
             SecureRandom random = new SecureRandom();
@@ -31,7 +30,6 @@ public class PasswordUtils {
         }
     }
 
-    // Verifies password against "salt:hash" string
     public static boolean verifyPassword(String inputPassword, String storedPasswordStorage) {
         if (storedPasswordStorage == null || !storedPasswordStorage.contains(":")) {
             return false;

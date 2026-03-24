@@ -49,6 +49,14 @@
             android:textColor="@color/white"
             android:paddingTop="10dp" />
 
+        <Button
+            android:id="@+id/btnViewMedia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/mizan_yellow"
+            android:textColor="@color/black"
+            android:text="View Media" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

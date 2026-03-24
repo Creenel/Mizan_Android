@@ -99,10 +99,10 @@ public class MainActivity extends AppCompatActivity {
                 t.printStackTrace();
                 runOnUiThread(() -> {
                     if (!isFinishing()) {
-                        // Show a Toast with the actual Room error
+
                         Toast.makeText(MainActivity.this, "DB error: " + t.getMessage(), Toast.LENGTH_LONG).show();
 
-                        // Optionally still go to LoginActivity
+
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         finish();
                     }
@@ -112,16 +112,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupNavigation() {
-        // Find the views from the layout
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
 
-        // Get the NavController
+
         NavController navController = navHostFragment.getNavController();
 
-        // This single line connects the bottom navigation bar to the NavController.
-        // It will automatically handle fragment switching for you!
+
         NavigationUI.setupWithNavController(bottomNav, navController);
     }
 

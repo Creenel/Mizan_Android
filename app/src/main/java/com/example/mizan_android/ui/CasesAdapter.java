@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,10 +22,22 @@ public class CasesAdapter extends RecyclerView.Adapter<CasesAdapter.CaseViewHold
 
     private List<CaseEntity> cases = new ArrayList<>();
 
+    public interface OnMediaClickListener {
+        void onMediaClick(CaseEntity caseEntity);
+    }
+
+    private OnMediaClickListener listener;
+
+    public CasesAdapter(OnMediaClickListener listener) {
+        this.listener = listener;
+    }
+
     public void setCases(List<CaseEntity> newCases) {
         cases = newCases;
         notifyDataSetChanged();
     }
+
+
 
     @NonNull
     @Override
@@ -42,6 +55,14 @@ public class CasesAdapter extends RecyclerView.Adapter<CasesAdapter.CaseViewHold
         holder.date.setText(c.getDate());
         holder.status.setText(c.getStatus());
         holder.description.setText(c.getDescription());
+
+        holder.btnViewMedia.setVisibility(View.VISIBLE);
+
+        holder.btnViewMedia.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onMediaClick(c);
+            }
+        });
     }
 
     @Override
@@ -49,12 +70,15 @@ public class CasesAdapter extends RecyclerView.Adapter<CasesAdapter.CaseViewHold
         return cases.size();
     }
 
+
+
     static class CaseViewHolder extends RecyclerView.ViewHolder {
 
         TextView type;
         TextView date;
         TextView status;
         TextView description;
+        Button btnViewMedia;
 
         public CaseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +87,7 @@ public class CasesAdapter extends RecyclerView.Adapter<CasesAdapter.CaseViewHold
             date = itemView.findViewById(R.id.txtCaseDate);
             status = itemView.findViewById(R.id.txtCaseStatus);
             description = itemView.findViewById(R.id.txtCaseDescription);
+            btnViewMedia = itemView.findViewById(R.id.btnViewMedia);
         }
     }
 }

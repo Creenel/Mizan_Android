@@ -18,4 +18,10 @@ public interface CaseDao {
 
     @Query("SELECT * FROM case_table WHERE userId = :userId")
     List<CaseEntity> getCasesForUserDebug(int userId);
+
+    @Query(" SELECT caseId, userId, type, description, date, status, NULL as mediaBytes FROM case_table WHERE userId = :userId")
+    LiveData<List<CaseEntity>> getCasesWithoutMedia(int userId);
+
+    @Query("SELECT mediaBytes FROM case_table WHERE caseId = :caseId LIMIT 1")
+    byte[] getMediaBytesByCaseId(int caseId);
 }

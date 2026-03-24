@@ -34,15 +34,23 @@ public class CaseEntity {
     @NonNull
     private String status;
 
-    // ✅ Must exist
+    private byte[] mediaBytes;
+
     public CaseEntity() {}
 
-    public CaseEntity(int userId, @NonNull String type, String description, @NonNull String status, @NonNull String date) {
+    public CaseEntity(int userId, @NonNull String type, String description,
+                      @NonNull String status, @NonNull String date, byte[] mediaBytes) {
         this.userId = userId;
         this.type = type;
         this.description = description;
         this.status = status;
         this.date = date;
+        this.mediaBytes = mediaBytes;
+    }
+
+    public CaseEntity(int userId, @NonNull String type, String description,
+                      @NonNull String status, @NonNull String date) {
+        this(userId, type, description, status, date, null);
     }
 
     public int getCaseId() {
@@ -96,5 +104,12 @@ public class CaseEntity {
         this.status = status;
     }
 
-}
+    public byte[] getMediaBytes() {
+        return mediaBytes;
+    }
 
+    public void setMediaBytes(byte[] mediaBytes) {
+        this.mediaBytes = mediaBytes;
+    }
+
+}
