@@ -49,18 +49,16 @@ public class SplashActivity extends AppCompatActivity {
         AppDatabase db = ((MizanApplication) getApplicationContext()).getDatabase();
         final UserDao userDao = db.userDao();
 
-        // Keep original variable names
         progressBar = findViewById(R.id.progressBar);
         layout = findViewById(R.id.splashLayout);
         imageView = findViewById(R.id.ivSplashIcon);
         animation = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
 
         mBatteryLevelText = findViewById(R.id.textView);
-        mBatteryLevelProgress = findViewById(R.id.progressBar); // still same, will guard later
+        mBatteryLevelProgress = findViewById(R.id.progressBar);
 
         mReceiver = new BatteryBroadcastReceiver();
 
-        // Animation listener
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -71,7 +69,6 @@ public class SplashActivity extends AppCompatActivity {
             public void onAnimationEnd(Animation animation) {
                 executor.execute(() -> {
                     try {
-                        // Room query wrapped in try/catch
                         User user = userDao.getLoggedInUser();
                         final boolean isLoggedIn = (user != null);
 
@@ -106,7 +103,6 @@ public class SplashActivity extends AppCompatActivity {
             public void onAnimationRepeat(Animation animation) { }
         });
 
-        // Start animation after 3 seconds
         handler.postDelayed(() -> {
             if (!isFinishing() && imageView != null) {
                 imageView.startAnimation(animation);
@@ -147,7 +143,6 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-            // Defensive null-checks
             if (mBatteryLevelText != null)
                 mBatteryLevelText.setText(getString(R.string.battery_level) + "  " + level);
             if (mBatteryLevelProgress != null)

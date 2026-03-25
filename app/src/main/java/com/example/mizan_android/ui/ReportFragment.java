@@ -75,10 +75,13 @@ public class ReportFragment extends Fragment {
         btnAttachments = root.findViewById(R.id.btn_attachments);
         btnSubmit = root.findViewById(R.id.btn_submit);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                requireContext(),
                 R.array.crime_types,
-                android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.spinner_item
+        );
+
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerCrimeType.setAdapter(adapter);
 
         editDate.setOnClickListener(v -> showDatePicker());
