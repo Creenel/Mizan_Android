@@ -60,7 +60,6 @@ public class SignupActivity extends AppCompatActivity {
                     User newUser = new User(email, passwordStorageValue, fullName);
                     userDao.insert(newUser);
 
-                    // Fetch and update while still on background thread
                     User user = userDao.getUserByUsername(email);
                     if (user != null) {
                         user.setIsLoggedIn(true);

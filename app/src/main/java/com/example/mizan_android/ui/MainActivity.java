@@ -60,23 +60,9 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                String fullName = user.getFullName();
-                String firstName;
-                if (fullName != null && !fullName.trim().isEmpty()) {
-                    firstName = fullName.trim().split("\\s+")[0];
-                } else if (user.getUsername() != null && !user.getUsername().isEmpty()) {
-                    firstName = user.getUsername();
-                } else {
-                    firstName = "User";
-                }
-                final String helloTextValue = "Hello, " + firstName + "!";
 
                 runOnUiThread(() -> {
                     if (!isFinishing()) {
-                        //TextView helloText = findViewById(R.id.helloText);
-                        //if (helloText != null) {
-                            //helloText.setText(helloTextValue);
-                        //}
 
                         ImageView signoutButton = findViewById(R.id.signoutIcon);
                         signoutButton.setOnClickListener(v -> {
@@ -112,15 +98,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupNavigation() {
-
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
-
-
         NavController navController = navHostFragment.getNavController();
-
-
         NavigationUI.setupWithNavController(bottomNav, navController);
     }
 
