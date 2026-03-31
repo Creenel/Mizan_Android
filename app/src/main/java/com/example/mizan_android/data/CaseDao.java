@@ -13,11 +13,8 @@ public interface CaseDao {
     @Insert
     void insert(CaseEntity caseEntity);
 
-    @Query("SELECT * FROM case_table WHERE userId = :userId ORDER BY caseId DESC")
-    LiveData<List<CaseEntity>> getCasesForUser(int userId);
-
     @Query("SELECT * FROM case_table WHERE userId = :userId")
-    List<CaseEntity> getCasesForUserDebug(int userId);
+    List<CaseEntity> getCasesForUser(int userId);
 
     @Query(" SELECT caseId, userId, type, description, date, status, NULL as mediaBytes FROM case_table WHERE userId = :userId")
     LiveData<List<CaseEntity>> getCasesWithoutMedia(int userId);

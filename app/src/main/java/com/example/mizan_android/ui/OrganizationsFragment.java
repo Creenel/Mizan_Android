@@ -77,7 +77,6 @@ public class OrganizationsFragment extends Fragment {
     }
 
     private void openChat(Organization org) {
-        // Placeholder
         Toast.makeText(getContext(), "This chat is not available yet!", Toast.LENGTH_SHORT).show();
 
     }
@@ -113,7 +112,6 @@ public class OrganizationsFragment extends Fragment {
         }
     }
 
-    // Models
     static class Organization {
         String name;
         int imageRes;

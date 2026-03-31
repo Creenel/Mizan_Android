@@ -26,8 +26,6 @@ public class CasesViewModel extends AndroidViewModel {
     }
 
     public void loadCases(int userId) {
-        android.util.Log.d("DB_DEBUG", "CasesViewModel.loadCases called with userId=" + userId
-                + " viewModelHash=" + System.identityHashCode(this));
         casesLive = caseDao.getCasesWithoutMedia(userId);
     }
 

@@ -28,13 +28,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import android.graphics.BitmapFactory;
-import android.app.AlertDialog;
+
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -81,6 +79,7 @@ public class CasesFragment extends Fragment {
 
             User logged = null;
             try {
+                logged = userDao.getLoggedInUser();
                 logged = userDao.getLoggedInUser();
             } catch (Exception ignored) {}
 
@@ -156,7 +155,7 @@ public class CasesFragment extends Fragment {
                     return;
                 }
 
-                List<CaseEntity> syncList = db.caseDao().getCasesForUserDebug(logged.getUserId());
+                List<CaseEntity> syncList = db.caseDao().getCasesForUser(logged.getUserId());
 
                 requireActivity().runOnUiThread(() -> {
                     if (syncList != null && !syncList.isEmpty()) {
@@ -213,9 +212,9 @@ public class CasesFragment extends Fragment {
 
         if (selection == 0) {
             Collections.sort(list, (a, b) -> {
-                Date da = parseDateSafe(a.getDate());
-                Date db = parseDateSafe(b.getDate());
-                return db.compareTo(da);
+                Date date_a = parseDateSafe(a.getDate());
+                Date date_b = parseDateSafe(b.getDate());
+                return date_b.compareTo(date_a);
             });
         } else {
             Collections.sort(list, (a, b) -> a.getType().compareToIgnoreCase(b.getType()));

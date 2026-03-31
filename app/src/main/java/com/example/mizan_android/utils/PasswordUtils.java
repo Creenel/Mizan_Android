@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import android.util.Base64; // For encoding
+import android.util.Base64;
 
 public class PasswordUtils {
 
@@ -18,7 +18,7 @@ public class PasswordUtils {
             random.nextBytes(salt);
 
             MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
-            md.update(salt); // Add salt
+            md.update(salt);
             byte[] hashedPasswordBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
 
             String encodedSalt = Base64.encodeToString(salt, Base64.NO_WRAP);

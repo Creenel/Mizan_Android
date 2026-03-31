@@ -48,11 +48,6 @@ public class CaseEntity {
         this.mediaBytes = mediaBytes;
     }
 
-    public CaseEntity(int userId, @NonNull String type, String description,
-                      @NonNull String status, @NonNull String date) {
-        this(userId, type, description, status, date, null);
-    }
-
     public int getCaseId() {
         return caseId;
     }

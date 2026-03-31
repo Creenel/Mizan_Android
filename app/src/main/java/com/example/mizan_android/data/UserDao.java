@@ -29,9 +29,5 @@ public interface UserDao {
     @Query("SELECT * FROM user_table WHERE isLoggedIn = 1 LIMIT 1")
     User getLoggedInUser();
 
-    @Query("SELECT * FROM user_table")
-    List<User> getAllUsers();
-
-
 
 }

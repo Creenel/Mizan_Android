@@ -12,27 +12,6 @@ import androidx.room.RoomDatabase;
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
-
-    private static volatile AppDatabase INSTANCE;
-
     public abstract UserDao userDao();
     public abstract CaseDao caseDao();
-
-    public static AppDatabase getInstance(Context context) {
-        if (INSTANCE == null) {
-            synchronized (AppDatabase.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(
-                                    context.getApplicationContext(),
-                                    AppDatabase.class,
-                                    "mizan_db"
-                            )
-                            .allowMainThreadQueries()
-                            .fallbackToDestructiveMigration()
-                            .build();
-                }
-            }
-        }
-        return INSTANCE;
-    }
 }

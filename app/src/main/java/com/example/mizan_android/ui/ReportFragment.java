@@ -215,8 +215,6 @@ public class ReportFragment extends Fragment {
                     return;
                 }
 
-                Log.d("MEDIA_DEBUG", "attachedMediaBytes = " + (attachedMediaBytes == null ? 0 : attachedMediaBytes.length));
-
                 CaseEntity c = new CaseEntity(
                         currentUser.getUserId(),
                         type,
@@ -226,12 +224,6 @@ public class ReportFragment extends Fragment {
                         attachedMediaBytes
                 );
                 caseDao.insert(c);
-
-                Log.d("DB_DEBUG", "ReportFragment inserted case. AppDatabase instance=" +
-                        System.identityHashCode(((MizanApplication) requireActivity().getApplicationContext()).getDatabase()));
-
-                Log.d("DB_DEBUG", "Inserted case for userId=" + currentUser.getUserId()
-                        + " type=" + type + " date=" + date + " descLen=" + (description == null ? 0 : description.length()));
 
                 requireActivity().runOnUiThread(() -> {
                     Toast.makeText(requireContext(), "Report submitted", Toast.LENGTH_LONG).show();
