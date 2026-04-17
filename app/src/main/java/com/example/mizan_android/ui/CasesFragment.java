@@ -47,12 +47,14 @@ public class CasesFragment extends Fragment {
 
     private List<CaseEntity> currentCases = null;
 
+    //for sorting the cases list
     private static final String[] SORT_OPTIONS = new String[]{
             "Date (newest first)",
             "Crime type (A→Z)"
     };
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d/M/yyyy"); // matches ReportFragment
+    // matches ReportFragment. Single d and M mean April displays as 4 and not 04, the 8th day displays as 8 and not 08...
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d/M/yyyy");
 
     @Nullable
     @Override
@@ -62,6 +64,8 @@ public class CasesFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_cases, container, false);
 
         recyclerCases = root.findViewById(R.id.recycler_cases);
+
+        //displays when no cases are found, and in fallbacks
         emptyState = root.findViewById(R.id.emptyState);
         spinnerSort = root.findViewById(R.id.spinner_sort);
 
@@ -69,20 +73,23 @@ public class CasesFragment extends Fragment {
         recyclerCases.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerCases.setAdapter(adapter);
 
+        //links to the ViewModel
         viewModel = new ViewModelProvider(this).get(CasesViewModel.class);
 
         setupSpinner();
 
+        //executor ensures task is executed on an appropriate thread and manages its lifecycle
         executor.execute(() -> {
             AppDatabase db = ((MizanApplication) requireActivity().getApplicationContext()).getDatabase();
             UserDao userDao = db.userDao();
 
+            //safety check
             User logged = null;
             try {
                 logged = userDao.getLoggedInUser();
                 logged = userDao.getLoggedInUser();
             } catch (Exception ignored) {}
-
+            //fallback
             if (logged == null) {
                 requireActivity().runOnUiThread(() -> {
                     recyclerCases.setVisibility(View.GONE);
@@ -92,6 +99,8 @@ public class CasesFragment extends Fragment {
             }
 
             final int userId = logged.getUserId();
+
+            //runs on the main thread of MainActivity
             requireActivity().runOnUiThread(() -> attachLiveData(userId));
         });
 
@@ -99,6 +108,7 @@ public class CasesFragment extends Fragment {
     }
 
     private void setupSpinner() {
+        //requireContext ensures context is not null and uses the context to access the layout directory
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(),
                 android.R.layout.simple_spinner_item, SORT_OPTIONS);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -113,6 +123,7 @@ public class CasesFragment extends Fragment {
                 }
             }
 
+            //necessary
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
@@ -121,13 +132,13 @@ public class CasesFragment extends Fragment {
     private void attachLiveData(int userId) {
         try {
             viewModel.loadCases(userId);
-
+            //fallback
             LiveData<List<CaseEntity>> ld = viewModel.getCases();
             if (ld == null) {
                 doFallbackSyncReadAndShow();
                 return;
             }
-
+            //fallback
             ld.observe(getViewLifecycleOwner(), list -> {
                 if (list == null || list.isEmpty()) {
                     doFallbackSyncReadAndShow();
@@ -136,12 +147,13 @@ public class CasesFragment extends Fragment {
                 currentCases = new ArrayList<>(list);
                 applySortAndShow(new ArrayList<>(list));
             });
-
+        //fallback
         } catch (Exception ignored) {
             doFallbackSyncReadAndShow();
         }
     }
 
+    //displays emptyState if user not found or no loaded cases
     private void doFallbackSyncReadAndShow() {
         executor.execute(() -> {
             try {
@@ -157,6 +169,7 @@ public class CasesFragment extends Fragment {
 
                 List<CaseEntity> syncList = db.caseDao().getCasesForUser(logged.getUserId());
 
+                //runs on main thread of MainActivity
                 requireActivity().runOnUiThread(() -> {
                     if (syncList != null && !syncList.isEmpty()) {
                         currentCases = new ArrayList<>(syncList);
@@ -178,6 +191,7 @@ public class CasesFragment extends Fragment {
         });
     }
 
+    //handles media display and renders window
     private void showCaseMedia(CaseEntity caseItem) {
         executor.execute(() -> {
             AppDatabase db = ((MizanApplication) requireActivity().getApplicationContext()).getDatabase();
@@ -205,6 +219,7 @@ public class CasesFragment extends Fragment {
         });
     }
 
+    //sorts the cases list according to spinner and displays it
     private void applySortAndShow(List<CaseEntity> list) {
         if (list == null) return;
 
@@ -217,6 +232,7 @@ public class CasesFragment extends Fragment {
                 return date_b.compareTo(date_a);
             });
         } else {
+            //compares case types alphabetically ignoring uppercase/lowercase
             Collections.sort(list, (a, b) -> a.getType().compareToIgnoreCase(b.getType()));
         }
 
@@ -228,6 +244,7 @@ public class CasesFragment extends Fragment {
         emptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
     }
 
+    //ensures date format doesn't cause errors, displays 0L (January 1, 1970) if invalid
     private Date parseDateSafe(String s) {
         if (s == null || s.isEmpty()) return new Date(0L);
         try {

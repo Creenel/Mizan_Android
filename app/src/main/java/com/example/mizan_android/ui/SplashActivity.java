@@ -67,12 +67,12 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                executor.execute(() -> {
+                executor.execute(() -> { //manages background threads for tasks
                     try {
                         User user = userDao.getLoggedInUser();
                         final boolean isLoggedIn = (user != null);
 
-                        runOnUiThread(() -> {
+                        runOnUiThread(() -> { //goes to login or mainactivity, depending on whether or not user found, at the end of the animation
                             if (progressBar != null) progressBar.setVisibility(View.GONE);
                             if (!isFinishing()) {
                                 Intent intent = new Intent(
@@ -100,7 +100,7 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) { }
+            public void onAnimationRepeat(Animation animation) { } //necessary, implementing interface
         });
 
         handler.postDelayed(() -> {
@@ -121,6 +121,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+    //shuts down battery receiver
     @Override
     protected void onStop() {
         super.onStop();
@@ -132,10 +133,11 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+    //shuts down executor
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
+        handler.removeCallbacksAndMessages(null); //clears handler queue, so tasks don't run after activity has been destroyed
         if (!executor.isShutdown()) executor.shutdownNow();
     }
 

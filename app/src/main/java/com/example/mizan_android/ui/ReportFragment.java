@@ -75,8 +75,8 @@ public class ReportFragment extends Fragment {
         btnAttachments = root.findViewById(R.id.btn_attachments);
         btnSubmit = root.findViewById(R.id.btn_submit);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                requireContext(),
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource( //creates an adapter to turn XML into views
+                requireContext(), //for layout and array directory access
                 R.array.crime_types,
                 R.layout.spinner_item
         );
@@ -96,7 +96,7 @@ public class ReportFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         DatePickerDialog dialog = new DatePickerDialog(requireContext(),
                 (view, year, month, dayOfMonth) ->
-                        editDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year),
+                        editDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year), //month goes 0-11 so 1 is added
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
@@ -110,7 +110,7 @@ public class ReportFragment extends Fragment {
                 .setItems(options, (d, which) -> {
                     if (which == 0) {
                         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                        if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) { //ensures there is an app that can capture images
                             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                         }
                     } else {
@@ -122,20 +122,20 @@ public class ReportFragment extends Fragment {
 
     private void requestUserLocation() {
         locationManager = (LocationManager) requireContext().getSystemService(Activity.LOCATION_SERVICE);
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) { //asks location permission
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
-            @Override public void onLocationChanged(@NonNull Location location) {
+            @Override public void onLocationChanged(@NonNull Location location) { //fetches location but doesn't log due to simulation. In finalized version will be logged with the case of course.
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 Toast.makeText(requireContext(), "Location captured", Toast.LENGTH_SHORT).show();
                 locationManager.removeUpdates(this);
             }
-            @Override public void onProviderDisabled(@NonNull String provider) {}
-            @Override public void onProviderEnabled(@NonNull String provider) {}
-            @Override public void onStatusChanged(String provider, int status, Bundle extras) {}
+            @Override public void onProviderDisabled(@NonNull String provider) {} //necessary, forced by interface
+            @Override public void onProviderEnabled(@NonNull String provider) {} //necessary
+            @Override public void onStatusChanged(String provider, int status, Bundle extras) {} //necessary
         });
     }
 
@@ -148,7 +148,7 @@ public class ReportFragment extends Fragment {
         }
     }
 
-    private byte[] bitmapToSmallBytes(Bitmap bitmap) {
+    private byte[] bitmapToSmallBytes(Bitmap bitmap) { //compresses image so it can be easily displayed in the app.
         int maxSize = 800;
 
         int width = bitmap.getWidth();
@@ -160,16 +160,16 @@ public class ReportFragment extends Fragment {
         int newWidth = Math.round(width * ratio);
         int newHeight = Math.round(height * ratio);
 
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); //creates the scaled bitmap, true for bilinear filtering which smoothens the image
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream); //saves as JPEG
         return stream.toByteArray();
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) { //handles image capture/pick and saves the byte[]
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK || data == null) return;
 

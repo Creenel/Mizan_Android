@@ -16,6 +16,7 @@ public interface CaseDao {
     @Query("SELECT * FROM case_table WHERE userId = :userId")
     List<CaseEntity> getCasesForUser(int userId);
 
+    //media is fetched with getMediaBytesByCaseId
     @Query(" SELECT caseId, userId, type, description, date, status, NULL as mediaBytes FROM case_table WHERE userId = :userId")
     LiveData<List<CaseEntity>> getCasesWithoutMedia(int userId);
 

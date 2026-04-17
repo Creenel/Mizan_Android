@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(LoginActivity.this, SignupActivity.class));
         });
 
+        //prevents UI collision with
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.login), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

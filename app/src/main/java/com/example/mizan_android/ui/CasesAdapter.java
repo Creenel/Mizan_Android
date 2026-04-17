@@ -20,25 +20,28 @@ import java.util.List;
 
 public class CasesAdapter extends RecyclerView.Adapter<CasesAdapter.CaseViewHolder> {
 
+    //ArrayList is useful for displaying lists that might change in length during runtime
     private List<CaseEntity> cases = new ArrayList<>();
 
     public interface OnMediaClickListener {
         void onMediaClick(CaseEntity caseEntity);
     }
 
-    private OnMediaClickListener listener;
 
+    private OnMediaClickListener listener;
+    //implements OnMediaClickListener, defined at the bottom
     public CasesAdapter(OnMediaClickListener listener) {
         this.listener = listener;
     }
 
+    //for updating cases list
     public void setCases(List<CaseEntity> newCases) {
         cases = newCases;
         notifyDataSetChanged();
     }
 
 
-
+    //inflates cases list
     @NonNull
     @Override
     public CaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -47,6 +50,7 @@ public class CasesAdapter extends RecyclerView.Adapter<CasesAdapter.CaseViewHold
         return new CaseViewHolder(v);
     }
 
+    //updates RecyclerView list when a new list item comes into the screen
     @Override
     public void onBindViewHolder(@NonNull CaseViewHolder holder, int position) {
         CaseEntity c = cases.get(position);
@@ -71,7 +75,7 @@ public class CasesAdapter extends RecyclerView.Adapter<CasesAdapter.CaseViewHold
     }
 
 
-
+    //Each case card
     static class CaseViewHolder extends RecyclerView.ViewHolder {
 
         TextView type;

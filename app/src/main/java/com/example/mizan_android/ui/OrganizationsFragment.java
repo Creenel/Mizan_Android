@@ -31,7 +31,7 @@ public class OrganizationsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) { //Bundle insures elements are saved when user navigates away and back
         View view = inflater.inflate(R.layout.fragment_organizations, container, false);
 
         orgRecyclerView = view.findViewById(R.id.orgRecyclerView);
@@ -46,7 +46,7 @@ public class OrganizationsFragment extends Fragment {
 
     private void setupOrganizations() {
         organizations = new ArrayList<>();
-        organizations.add(new Organization("Adalah", R.drawable.adalah, "Adalah is the first Palestinian Arab-run legal center in Israel..."));
+        organizations.add(new Organization("Adalah", R.drawable.adalah, "Adalah is the first Arab-run legal center in Israel..."));
         organizations.add(new Organization("Aman", R.drawable.aman, "Aman center promotes civil and human rights..."));
         organizations.add(new Organization("Zazim", R.drawable.zazim, "Zazim is a civic movement of Arabs and Jews in Israel..."));
 
@@ -76,6 +76,7 @@ public class OrganizationsFragment extends Fragment {
         });
     }
 
+    //Due to simulation. Will be implemented upon cooperating with organizations.
     private void openChat(Organization org) {
         Toast.makeText(getContext(), "This chat is not available yet!", Toast.LENGTH_SHORT).show();
 
@@ -133,6 +134,7 @@ public class OrganizationsFragment extends Fragment {
         }
     }
 
+    //stores views for recycler display
     static class OrgViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         ImageView image;

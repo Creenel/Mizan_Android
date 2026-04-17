@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 User user = userDao.getLoggedInUser();
 
+                //opens LoginActivity if user is null
                 if (user == null) {
                     runOnUiThread(() -> {
                         if (!isFinishing()) {
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //binds the fragment container, the navbar view and the controller which handles navigation logic
     private void setupNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()

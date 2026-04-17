@@ -27,7 +27,7 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_signup); //inflates layout. For fragments and small views an inflater is implemented instead
 
         AppDatabase db = ((MizanApplication) getApplicationContext()).getDatabase();
         UserDao userDao = db.userDao();
@@ -55,18 +55,18 @@ public class SignupActivity extends AppCompatActivity {
                         return;
                     }
 
-                    String passwordStorageValue = PasswordUtils.generatePasswordStorage(password);
+                    String passwordStorageValue = PasswordUtils.generatePasswordStorage(password); //encrypts password string using SHA-256
 
                     User newUser = new User(email, passwordStorageValue, fullName);
                     userDao.insert(newUser);
 
-                    User user = userDao.getUserByUsername(email);
+                    User user = userDao.getUserByUsername(email); //logs newly created user in
                     if (user != null) {
                         user.setIsLoggedIn(true);
                         userDao.update(user);
                     }
 
-                    runOnUiThread(() -> {
+                    runOnUiThread(() -> { //opens mainActivity
                         Toast.makeText(SignupActivity.this, "Signup successful!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -84,7 +84,7 @@ public class SignupActivity extends AppCompatActivity {
             startActivity(new Intent(SignupActivity.this, LoginActivity.class));
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> { //adjusts view size for status bar, etc
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;

@@ -15,6 +15,7 @@ public class User {
 
     private String fullName;
 
+    //the password is not stored in plain text, rather hashed using SHA-256 in passwordUtils
     @NonNull
     private String passwordStorage;
 

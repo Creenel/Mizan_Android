@@ -5,13 +5,13 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
+//each case belongs to a single user, and includes that userId as a field
 @Entity(
         tableName = "case_table",
         foreignKeys = @ForeignKey(
                 entity = User.class,
                 parentColumns = "userId",
-                childColumns = "userId",
+                childColumns = "userId", //when a row in user_table is deleted, all corresponding cases are erased
                 onDelete = ForeignKey.CASCADE
         ),
         indices = {@Index("userId")}

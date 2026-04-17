@@ -23,6 +23,7 @@ public interface UserDao {
     @Query("SELECT * FROM user_table WHERE username = :username LIMIT 1")
     User getUserByUsername(String username);
 
+    //prevents duplicate usernames
     @Query("SELECT COUNT(*) FROM user_table WHERE username = :username ")
     int countUsersWithUsername(String username);
 

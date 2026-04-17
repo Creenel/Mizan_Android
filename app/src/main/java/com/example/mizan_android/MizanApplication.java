@@ -13,7 +13,7 @@ public class MizanApplication extends Application {
         super.onCreate();
         appDatabase = Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "app_database")
-                .fallbackToDestructiveMigration()
+                .fallbackToDestructiveMigration() //wipes all data if database is updated without defined migration
                 .build();
     }
 
